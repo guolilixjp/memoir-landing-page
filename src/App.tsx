@@ -4,6 +4,11 @@ import { Mail, Users } from 'lucide-react'
 
 const IOS_BETA_URL = 'https://testflight.apple.com/join/e85bgvNw'
 const ANDROID_BETA_URL = 'https://play.google.com/apps/internaltest/4701694446775861650'
+const NAME_MIN = 2
+const NAME_MAX = 30
+
+const qrUrl = (text: string) =>
+  `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(text)}`
 
 function App() {
   const { subscribe, isSubmitting, error, isSuccess, reset } = useSubscribe()
@@ -15,11 +20,12 @@ function App() {
 
   const validateForm = () => {
     const newErrors: {name?: string; email?: string} = {}
+    const name = formData.name.trim()
     
-    if (!formData.name.trim()) {
+    if (!name) {
       newErrors.name = 'Please enter your name'
-    } else if (formData.name.length < 2 || formData.name.length > 10) {
-      newErrors.name = 'Name should be 2–10 characters'
+    } else if (name.length < NAME_MIN || name.length > NAME_MAX) {
+      newErrors.name = `Name should be ${NAME_MIN}–${NAME_MAX} characters`
     }
     
     if (!formData.email.trim()) {
@@ -38,7 +44,10 @@ function App() {
     if (!validateForm()) return
     
     try {
-      await subscribe(formData)
+      await subscribe({
+        name: formData.name.trim(),
+        email: formData.email.trim()
+      })
       setFormData({ name: '', email: '' })
     } catch (err) {
       // Error is handled in the hook
@@ -167,7 +176,38 @@ function App() {
                     <ul className="text-lg text-gray-700 space-y-2">
                       <li>iOS: open the TestFlight link, install TestFlight, then tap Install.</li>
                       <li>Android: open the Google Play link and join as a tester using your Google account.</li>
+                      <li>If you opened this on a computer, scan the QR code below with your phone.</li>
                     </ul>
+                  </div>
+
+                  <div className="max-w-2xl mx-auto mt-8 bg-white/60 rounded-xl p-6">
+                    <p className="text-lg text-gray-800 font-semibold mb-4">Scan to install</p>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="flex flex-col items-center text-center">
+                        <img
+                          src={qrUrl(IOS_BETA_URL)}
+                          alt="QR code for iOS TestFlight beta link"
+                          width={220}
+                          height={220}
+                          loading="lazy"
+                          className="rounded-xl border border-green-200 bg-white"
+                        />
+                        <p className="mt-3 text-lg font-semibold text-gray-800">iPhone/iPad</p>
+                        <p className="text-sm text-gray-600">Use your Camera app to scan</p>
+                      </div>
+                      <div className="flex flex-col items-center text-center">
+                        <img
+                          src={qrUrl(ANDROID_BETA_URL)}
+                          alt="QR code for Android Google Play beta link"
+                          width={220}
+                          height={220}
+                          loading="lazy"
+                          className="rounded-xl border border-green-200 bg-white"
+                        />
+                        <p className="mt-3 text-lg font-semibold text-gray-800">Android</p>
+                        <p className="text-sm text-gray-600">Use your Camera or Google Lens</p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mt-8">
@@ -196,7 +236,7 @@ function App() {
                             ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-200' 
                             : 'border-gray-300 focus:border-accent-500 focus:ring-accent-200'
                         }`}
-                        placeholder="Please enter your name (2–10 characters)"
+                        placeholder={`Please enter your name (${NAME_MIN}–${NAME_MAX} characters)`}
                         disabled={isSubmitting}
                       />
                       {errors.name && (

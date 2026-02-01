@@ -30,6 +30,10 @@ export const useSubscribe = () => {
           throw new Error('This email is already subscribed')
         }
 
+        if (error.code === '23514') {
+          throw new Error('Name is too long — please use a shorter name')
+        }
+
         if (error.code === '42501') {
           throw new Error('Permission denied. Please verify Supabase RLS INSERT policy.')
         }
