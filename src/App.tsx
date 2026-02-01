@@ -40,7 +40,6 @@ function App() {
     try {
       await subscribe(formData)
       setFormData({ name: '', email: '' })
-      setTimeout(() => reset(), 3000)
     } catch (err) {
       // Error is handled in the hook
     }
@@ -169,6 +168,16 @@ function App() {
                       <li>iOS: open the TestFlight link, install TestFlight, then tap Install.</li>
                       <li>Android: open the Google Play link and join as a tester using your Google account.</li>
                     </ul>
+                  </div>
+
+                  <div className="mt-8">
+                    <button
+                      type="button"
+                      onClick={() => reset()}
+                      className="inline-flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 text-lg font-semibold py-3 px-6 rounded-xl border border-green-200 transition-all duration-200"
+                    >
+                      Back to form
+                    </button>
                   </div>
                 </div>
               ) : (
