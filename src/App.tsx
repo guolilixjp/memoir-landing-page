@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useSubscribe } from './hooks/useSubscribe'
 import { Mail, Users } from 'lucide-react'
 
+const IOS_BETA_URL = 'https://testflight.apple.com/join/e85bgvNw'
+const ANDROID_BETA_URL = 'https://play.google.com/apps/internaltest/4701694446775861650'
+
 function App() {
   const { subscribe, isSubmitting, error, isSuccess, reset } = useSubscribe()
   const [formData, setFormData] = useState({
@@ -124,7 +127,10 @@ function App() {
                   Get early access
                 </h3>
                 <p className="text-xl text-gray-600">
-                  Leave your email and we’ll invite you when the app is ready
+                  Leave your email to get the beta links right away (we’ll also send updates)
+                </p>
+                <p className="text-lg text-gray-500 mt-3">
+                  Android testers: please use a Google account email (Gmail works best).
                 </p>
               </div>
 
@@ -132,11 +138,38 @@ function App() {
                 <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
                   <div className="text-6xl mb-4">✅</div>
                   <h4 className="text-2xl font-bold text-green-800 mb-2">
-                    Thank you!
+                    Thanks — you can install the beta now
                   </h4>
-                  <p className="text-xl text-green-600">
-                    We’ll be in touch by email as soon as we’re ready.
+                  <p className="text-xl text-green-700 mb-6">
+                    Choose your device and follow the steps. If anything feels confusing, reply to the email you used.
                   </p>
+
+                  <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <a
+                      href={IOS_BETA_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block bg-primary-900 hover:bg-primary-800 text-white text-xl font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
+                      Install on iPhone/iPad (TestFlight)
+                    </a>
+                    <a
+                      href={ANDROID_BETA_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block bg-accent-500 hover:bg-accent-600 text-white text-xl font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
+                      Install on Android (Google Play)
+                    </a>
+                  </div>
+
+                  <div className="text-left max-w-2xl mx-auto mt-8 bg-white/60 rounded-xl p-6">
+                    <p className="text-lg text-gray-800 font-semibold mb-3">Quick steps</p>
+                    <ul className="text-lg text-gray-700 space-y-2">
+                      <li>iOS: open the TestFlight link, install TestFlight, then tap Install.</li>
+                      <li>Android: open the Google Play link and join as a tester using your Google account.</li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
